@@ -2,6 +2,8 @@
 	import type { Content } from '@prisma/client';
 	import { onMount } from 'svelte';
 
+	import { DatetimeDifference, UNIT_MAP } from '$lib/client/utils/datetime';
+
 	interface ContentRequest {
 		title: string;
 		body: string;
@@ -23,8 +25,15 @@
 		return { title, body: body.join('\n') };
 	}
 
+	function getCreatedAtTimeFromNow(date: Date): string {
+		const dt = new DatetimeDifference(new Date(), date);
+		const { unit, minDiff } = dt.minimumDifference;
+		const unitMin = Object(UNIT_MAP)[unit];
+		const minDiffFormatted = Math.floor(minDiff);
+		return `${minDiffFormatted}${unitMin}`;
+	}
+
 	async function submitDiaryContentHandler() {
-		console.log({ content });
 		await fetch('/api/diary/content', {
 			method: 'POST',
 			body: JSON.stringify({ content })
@@ -69,6 +78,7 @@
 					<li>
 						<div>
 							<p>{c.username}</p>
+							<p>&#x2022; {getCreatedAtTimeFromNow(new Date(c.createdAt))}</p>
 						</div>
 						<h3>{c.title}</h3>
 						<p>{c.body}</p>
