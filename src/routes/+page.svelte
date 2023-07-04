@@ -7,7 +7,11 @@
 		body: string;
 	}
 
-	let contents: Content[] = [];
+	interface ContentWithUser extends Content {
+		username: string;
+	}
+
+	let contents: ContentWithUser[] = [];
 
 	let contentBody: string;
 	$: content = extractContent(contentBody);
@@ -63,6 +67,9 @@
 			<ul>
 				{#each contents as c}
 					<li>
+						<div>
+							<p>{c.username}</p>
+						</div>
 						<h3>{c.title}</h3>
 						<p>{c.body}</p>
 					</li>
