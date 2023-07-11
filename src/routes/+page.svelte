@@ -8,6 +8,8 @@
 	import PageContentTypeOption from '$lib/client/component/home/PageContentTypeOption.svelte';
 	import PageContents, { fetchContents } from '$lib/client/component/home/PageContents.svelte';
 	import { onMount } from 'svelte';
+	import addIcon from '$lib/assets/icons/add-700.svg';
+	import { goto } from '$app/navigation';
 
 	let contentBody: string;
 	let contents: ContentWithUser[] = [];
@@ -19,7 +21,7 @@
 	}
 </script>
 
-<main>
+<main class="relative">
 	<section id="home-page__header">
 		<div class="hidden">
 			<nav>
@@ -62,4 +64,7 @@
 			<PageContents {contents} />
 		</div>
 	</section>
+	<button class="m-2 fixed bottom-10 right-4" on:click={() => goto('/compose/content')}>
+		<img alt="" src={addIcon} class="w-10 p-2 rounded-full bg-sky-400 hover:bg-sky-500" />
+	</button>
 </main>

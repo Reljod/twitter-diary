@@ -27,13 +27,21 @@
 
 <script lang="ts">
 	import { DatetimeDifference, UNIT_MAP } from '$lib/client/utils/datetime';
+	import { afterUpdate } from 'svelte';
 
 	export let content: ContentWithUser;
+	let contentTitle: HTMLElement;
+	let contentBody: HTMLElement;
 
 	function getCreatedAtTimeFromNow(date: Date): string {
 		const { unit, minDiff } = new DatetimeDifference(new Date(), date).minimumDifference;
 		return `${Math.floor(minDiff)}${Object(UNIT_MAP)[unit]}`;
 	}
+
+	afterUpdate(() => {
+		contentTitle.innerHTML = content.title;
+		contentBody.innerHTML = content.body || '';
+	});
 </script>
 
 <div class="mr-3">
@@ -47,7 +55,7 @@
 		>
 	</div>
 	<div class="mt-1">
-		<p class="font-medium first-letter:capitalize">{content.title}</p>
-		<p class="italic">&#x201C;{content.body}&#x201D;</p>
+		<p bind:this={contentTitle} class="font-medium" />
+		<p bind:this={contentBody} />
 	</div>
 </div>
