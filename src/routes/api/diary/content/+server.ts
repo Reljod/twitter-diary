@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
-import { AppServer } from '../../../../lib/server/index.js';
-import type { Content } from '../../../../lib/server/services/content-service.js';
+import { AppServer } from '$lib/server/index.js';
+import type { Content } from '$lib/server/services/content-service.js';
 
 export async function POST({ request }) {
 	const { content } = (await request.json()) as { content: Content };
