@@ -1,38 +1,24 @@
-# create-svelte
+# Twitter Diary
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+**Twitter Diary** is just a Diary as a Web-App with UI similar to Twitter.
 
-## Creating a project
+This is built using a Full-stack UI framework called [Sveltekit](https://kit.svelte.dev/).
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Tech Stack
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+- Node.js (18.16.x)
+- Typescript (5.x.x)
+- Svelte (4.x.x)
+- Tailwind (3.3.x)
+- Vite (4.3.x)
+- Prisma (4.16.x)
+- and other testing and linting tools...
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+## Development and Contribution Guide
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- Initially, run `npm install` && `npm run build` && `npm run test:unit`.
+- Then, run `npm run dev -- --open` and make some changes in watch mode.
+- Test accordingly via `npm run test:unit` and `npm run test:integration`
+- Before staging, commiting and pushing, make sure to run `npm run lint && npm run format` to align with the style guide.
+- Make sure to always create a new branch before commiting and pushing.
+- Then push the changes to remote, and create a Merge/Pull Request.
