@@ -8,8 +8,8 @@ export async function POST({ request }) {
   return json({ contentId }, { status: 201 });
 }
 
-export async function GET() {
-  const contents = await AppServer.contentService.getContents();
+export async function GET({ url }) {
+  const contents = await AppServer.contentService.getContents({ count: 20, skip: 0 });
 
   return json({ contents }, { status: 200 });
 }
