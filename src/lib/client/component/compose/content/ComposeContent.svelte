@@ -1,37 +1,33 @@
 <script lang="ts" context="module">
-  import { marked } from 'marked';
-  import { mangle } from 'marked-mangle';
+  import markdown from '$lib/client/ui-tools/markdown';
 
-  marked.use(mangle());
-  marked.use({
-    headerIds: false,
-    gfm: true
-  });
+  const md = markdown.pick('compose-content');
 
   export function transformTitle(title: string) {
-    const cleanedTitle = title.replaceAll('*', '').trim();
-    if (!cleanedTitle) return '';
-    const uppercasedTitle = cleanedTitle.slice(0, 1).toUpperCase() + cleanedTitle.slice(1);
-    return `**${uppercasedTitle}**`;
+    let newTitle = title.slice(0, 1).toUpperCase() + title.slice(1);
+    return `<h1>${newTitle}</h1>`;
+  }
+
+  function getContent(inputHTML: string) {
+    const capturedTitleObj = /<h1>(.+)<\/h1>(.+)/.exec(inputHTML);
+    if (!capturedTitleObj) return { title: '', body: '' };
+
+    const title = capturedTitleObj[1];
+    const body = capturedTitleObj[2];
+
+    return { title, body };
   }
 
   export function parseContentOutput(input: string) {
     if (!input) return { htmlOutput: '', content: { title: '', body: '' } };
-    const [title, ...bodies] = input.split('<br>');
-    const parsedTitle = transformTitle(title);
-
-    const markedTitle = marked.parse(parsedTitle).trim();
-    const markedBody = bodies
-      .reduce((acc: string[], body: string) => {
-        return [...acc, marked.parse(body).trim()];
-      }, [])
-      .join('');
+    const htmlOutput = md.render(input).replaceAll('\n', '');
+    const { title, body } = getContent(htmlOutput);
 
     return {
-      htmlOutput: markedTitle + markedBody,
+      htmlOutput,
       content: {
-        title: markedTitle,
-        body: markedBody
+        title: title,
+        body: body
       }
     };
   }
@@ -50,13 +46,6 @@
 
   $: contentOutput = parseContentOutput(contentInput);
   $: if (showPreview && contentOutputElem) contentOutputElem.innerHTML = contentOutput.htmlOutput;
-
-  function onKeyDown(event: KeyboardEvent) {
-    if (event?.key === 'Enter') {
-      document.execCommand('insertLineBreak');
-      event.preventDefault();
-    }
-  }
 
   function onTextAreaClick() {
     showPreview = false;
@@ -94,25 +83,22 @@
             <img alt="" src={expandMore} class="w-5" />
           </button>
         </div>
-        <div class="min-h-[7rem] max-h-44 max-w-[19rem] text-xl px-2 py-3">
+        <div class="h-60 max-w-[19rem] text-xl px-2 py-3">
           {#if showPreview && !!contentOutput.htmlOutput}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <div
-              class="h-full w-full break-words"
+              class="prose h-full w-full overflow-y-scroll px-1 break-words"
               bind:this={contentOutputElem}
               on:click={onTextAreaClick}
             />
           {:else}
-            <!-- svelte-ignore a11y-no-static-element-interactions -->
-            <div
+            <textarea
               id="content-textarea"
-              contenteditable="true"
-              bind:innerHTML={contentInput}
               on:blur={() => (showPreview = true)}
-              on:keydown={onKeyDown}
+              bind:value={contentInput}
               placeholder="What is happening?!"
-              class="h-full w-full break-words overflow-y-scroll outline-none px-1"
+              class="h-full w-full break-words overflow-y-scroll outline-none px-1 resize-none"
             />
           {/if}
         </div>
@@ -122,10 +108,4 @@
 </div>
 
 <style>
-  #content-textarea[contenteditable='true']:empty:before {
-    content: attr(placeholder);
-    pointer-events: none;
-    display: block; /* For Firefox */
-    color: rgb(107 114 128);
-  }
 </style>

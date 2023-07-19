@@ -54,8 +54,8 @@
       >&#x2022; {getCreatedAtTimeFromNow(new Date(content.createdAt))}</span
     >
   </div>
-  <div class="mt-1">
-    <p bind:this={contentTitle} class="font-medium" />
-    <p bind:this={contentBody} />
+  <div class="prose mt-1">
+    <div bind:this={contentTitle} class="font-medium" />
+    <div bind:this={contentBody} />
   </div>
 </div>
