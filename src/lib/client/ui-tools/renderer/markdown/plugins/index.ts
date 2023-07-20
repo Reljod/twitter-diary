@@ -1,7 +1,7 @@
 export interface MarkdownRendererPlugin {
   id: string;
   canRender: (markdown: string) => boolean;
-  render: (markdown: string) => string | Promise<string>;
+  render: (markdown: string) => string;
 }
 
 export interface MarkdownRendererDeps {
@@ -9,7 +9,7 @@ export interface MarkdownRendererDeps {
 }
 
 export interface MarkdownRenderer {
-  render: (markdown: string) => string | Promise<string>;
+  render: (markdown: string) => string;
 }
 
 export class GenericMarkdownRenderer implements MarkdownRenderer {
@@ -31,7 +31,7 @@ export class GenericMarkdownRenderer implements MarkdownRenderer {
     });
   }
 
-  async render(markdown: string): Promise<string> {
+  render(markdown: string): string {
     const cMarkdown = this.cleanMarkdown(markdown);
     const markdownLines = cMarkdown.split('\n');
     const renderedLines = markdownLines.map((md) => {
@@ -43,7 +43,7 @@ export class GenericMarkdownRenderer implements MarkdownRenderer {
   private renderInline(markdown: string): string {
     const renderer = this.determineRenderer(markdown);
     if (!renderer) return `<p>${markdown}</p>`;
-    return renderer.render(markdown) as string;
+    return renderer.render(markdown);
   }
 
   private determineRenderer(
