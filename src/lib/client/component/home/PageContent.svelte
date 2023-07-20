@@ -26,6 +26,7 @@
 </script>
 
 <script lang="ts">
+  import renderer from '$lib/client/ui-tools/renderer/markdown';
   import { DatetimeDifference, UNIT_MAP } from '$lib/client/utils/datetime';
   import { afterUpdate } from 'svelte';
 
@@ -34,12 +35,13 @@
   let contentBody: HTMLElement;
 
   function getCreatedAtTimeFromNow(date: Date): string {
-    const { unit, minDiff } = new DatetimeDifference(new Date(), date).minimumDifference;
+    const { unit, minDiff } = new DatetimeDifference(new Date(), date)
+      .minimumDifference;
     return `${Math.floor(minDiff)}${Object(UNIT_MAP)[unit]}`;
   }
 
   afterUpdate(() => {
-    contentTitle.innerHTML = content.title;
+    contentTitle.innerHTML = renderer.render(content.title);
     contentBody.innerHTML = content.body || '';
   });
 </script>
@@ -54,8 +56,8 @@
       >&#x2022; {getCreatedAtTimeFromNow(new Date(content.createdAt))}</span
     >
   </div>
-  <div class="prose mt-1">
-    <div bind:this={contentTitle} class="font-medium" />
+  <div class="mt-1">
+    <div bind:this={contentTitle} />
     <div bind:this={contentBody} />
   </div>
 </div>
