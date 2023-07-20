@@ -1,15 +1,8 @@
 <script lang="ts" context="module">
-  import markdown from '$lib/client/ui-tools/markdown';
-
-  const md = markdown.pick('compose-content');
-
-  export function transformTitle(title: string) {
-    let newTitle = title.slice(0, 1).toUpperCase() + title.slice(1);
-    return `<h1>${newTitle}</h1>`;
-  }
+  import renderer from '$lib/client/ui-tools/renderer/markdown';
 
   function getContent(inputHTML: string) {
-    const capturedTitleObj = /<h1>(.+)<\/h1>(.+)/.exec(inputHTML);
+    const capturedTitleObj = /<h1 class=".+">(.+)<\/h1>(.+)/.exec(inputHTML);
     if (!capturedTitleObj) return { title: '', body: '' };
 
     const title = capturedTitleObj[1];
@@ -20,7 +13,7 @@
 
   export function parseContentOutput(input: string) {
     if (!input) return { htmlOutput: '', content: { title: '', body: '' } };
-    const htmlOutput = md.render(input).replaceAll('\n', '');
+    const htmlOutput = renderer.render(input) as string;
     const { title, body } = getContent(htmlOutput);
 
     return {
@@ -45,7 +38,8 @@
   let showPreview: boolean = false;
 
   $: contentOutput = parseContentOutput(contentInput);
-  $: if (showPreview && contentOutputElem) contentOutputElem.innerHTML = contentOutput.htmlOutput;
+  $: if (showPreview && contentOutputElem)
+    contentOutputElem.innerHTML = contentOutput.htmlOutput;
 
   function onTextAreaClick() {
     showPreview = false;
@@ -88,7 +82,7 @@
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <!-- svelte-ignore a11y-no-static-element-interactions -->
             <div
-              class="prose h-full w-full overflow-y-scroll px-1 break-words"
+              class="h-full w-full overflow-y-scroll px-1 break-words"
               bind:this={contentOutputElem}
               on:click={onTextAreaClick}
             />
@@ -106,6 +100,3 @@
     </div>
   </div>
 </div>
-
-<style>
-</style>
