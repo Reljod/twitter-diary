@@ -1,29 +1,11 @@
-export interface MarkdownRendererPlugin {
-  id: string;
-  canRender: (markdown: string) => boolean;
-  render: (markdown: string) => string | Promise<string>;
-}
+import { default as h1plugin } from '$lib/client/ui-tools/renderer/markdown/plugins/tailwind/h1-md-tw-renderer-plugin';
+import { default as h2plugin } from '$lib/client/ui-tools/renderer/markdown/plugins/tailwind/h2-md-tw-renderer-plugin';
+import { ContentMarkdownRenderer } from './content-markdown-renderer';
+import { GenericMarkdownRenderer } from './plugins';
 
-export interface MarkdownRenderer {
-  plugins: MarkdownRendererPlugin[];
-}
+const markdownRenderer = new GenericMarkdownRenderer({
+  plugins: [h1plugin, h2plugin]
+});
+const renderer = new ContentMarkdownRenderer(markdownRenderer);
 
-export class TailwindMarkdownRenderer implements MarkdownRenderer {
-  plugins: MarkdownRendererPlugin[];
-
-  constructor(dependencies: MarkdownRenderer) {
-    this.plugins = dependencies.plugins;
-    this.isPluginIdsUniqueOrThrow();
-  }
-
-  isPluginIdsUniqueOrThrow() {
-    const pluginIdsSet = new Set<string>();
-    this.plugins.forEach((plugin) => {
-      const beforeLength = pluginIdsSet.size;
-      pluginIdsSet.add(plugin.id);
-      if (beforeLength === pluginIdsSet.size) {
-        throw new Error('Markdown Renderer Plugin IDs should be unique');
-      }
-    });
-  }
-}
+export default renderer;
