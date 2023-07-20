@@ -7,7 +7,7 @@ export class ContentMarkdownRenderer implements MarkdownRenderer {
     this.markdownRenderer = markdownRenderer;
   }
 
-  render(markdown: string): string | Promise<string> {
+  render(markdown: string): string {
     const [firstLine, ...others] = markdown.split('\n');
     const newFirstLine = !!firstLine ? `# ${firstLine}` : '';
     const newMarkdown = [newFirstLine, ...others].join('\n');
