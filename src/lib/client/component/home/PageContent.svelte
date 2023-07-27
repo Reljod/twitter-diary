@@ -29,6 +29,8 @@
   import renderer from '$lib/client/ui-tools/renderer/markdown';
   import { DatetimeDifference, UNIT_MAP } from '$lib/client/utils/datetime';
   import { afterUpdate } from 'svelte';
+  import MoreHoriz from '$lib/assets/icons/more-horiz.svelte';
+  import { modalContent } from '$lib/client/stores/modals';
 
   export let content: ContentWithUser;
   let contentTitle: HTMLElement;
@@ -46,18 +48,26 @@
   });
 </script>
 
-<div class="mr-3">
-  <img src="/template-profile-picture.svg" alt="" class="max-h-8" />
-</div>
-<div class="flex-1">
-  <div>
-    <span class="font-bold">{content.username}</span>
-    <span class="text-gray-500"
-      >&#x2022; {getCreatedAtTimeFromNow(new Date(content.createdAt))}</span
-    >
+<li class="relative flex border-t border-gray-100 p-3">
+  <button
+    class="absolute top-0 right-0 p-2 m-2 rounded-full focus:bg-primary-blue focus:bg-opacity-25"
+    on:click={() => modalContent.set({ ...content })}
+  >
+    <MoreHoriz class="fill-gray-500 h-5 w-5" />
+  </button>
+  <div class="mr-3">
+    <img src="/template-profile-picture.svg" alt="" class="max-h-8" />
   </div>
-  <div class="mt-1">
-    <div bind:this={contentTitle} />
-    <div bind:this={contentBody} />
+  <div class="flex-1">
+    <div>
+      <span class="font-bold">{content.username}</span>
+      <span class="text-gray-500"
+        >&#x2022; {getCreatedAtTimeFromNow(new Date(content.createdAt))}</span
+      >
+    </div>
+    <div class="mt-1">
+      <div bind:this={contentTitle} />
+      <div bind:this={contentBody} />
+    </div>
   </div>
-</div>
+</li>

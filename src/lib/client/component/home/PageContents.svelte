@@ -13,8 +13,6 @@
 
 <ul>
   {#each contents as content}
-    <li class="flex border-t border-gray-100 p-3">
-      <PageContent {content} />
-    </li>
+    <PageContent {content} />
   {/each}
 </ul>
