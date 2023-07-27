@@ -5,7 +5,7 @@ export class H1MarkdownTailwindRendererPlugin
 {
   private ID = '# ';
   private TAG =
-    '<h1 class="first-letter:capitalize font-bold text-3xl">{}</h1>';
+    '<h1 class="first-letter:capitalize font-medium text-xl">{}</h1>';
   private CAPTURE_H1_REGEX = /# (.*)/;
   constructor() {}
 
