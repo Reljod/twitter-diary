@@ -1,6 +1,6 @@
-import { json } from '@sveltejs/kit';
 import { AppServer } from '$lib/server/index.js';
 import type { Content } from '$lib/server/services/content-service.js';
+import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
   const { content } = (await request.json()) as { content: Content };
@@ -15,10 +15,14 @@ export async function DELETE({ request }) {
 }
 
 export async function GET({ url }) {
-  const contents = await AppServer.contentService.getContents({
-    count: 20,
-    skip: 0
-  });
+  const n = url.searchParams.get('n');
+  const s = url.searchParams.get('s');
+
+  const count = !!n ? parseInt(n) : 20;
+  const skip = !!s ? parseInt(s) : 0;
+
+  const options = !!count && !!skip ? { count, skip } : undefined;
+  const contents = await AppServer.contentService.getContents(options);
 
   return json({ contents }, { status: 200 });
 }
