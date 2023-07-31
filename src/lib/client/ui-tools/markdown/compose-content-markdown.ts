@@ -37,7 +37,6 @@ class ComposeContentMarkdown {
 
   render(text: string): string {
     const mdRendered = this.md.render(text);
-    console.log({ text, mdRendered });
     const { title, body } = this.getTitleBody(mdRendered);
     return title + body;
   }

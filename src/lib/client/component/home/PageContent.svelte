@@ -26,11 +26,11 @@
 </script>
 
 <script lang="ts">
+  import MoreHoriz from '$lib/assets/icons/more-horiz.svelte';
+  import { modalContent } from '$lib/client/stores/modals';
   import renderer from '$lib/client/ui-tools/renderer/markdown';
   import { DatetimeDifference, UNIT_MAP } from '$lib/client/utils/datetime';
   import { afterUpdate } from 'svelte';
-  import MoreHoriz from '$lib/assets/icons/more-horiz.svelte';
-  import { modalContent } from '$lib/client/stores/modals';
 
   export let content: ContentWithUser;
   let contentTitle: HTMLElement;
