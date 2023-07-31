@@ -18,10 +18,10 @@ export async function GET({ url }) {
   const n = url.searchParams.get('n');
   const s = url.searchParams.get('s');
 
-  const count = !!n ? parseInt(n) : 20;
-  const skip = !!s ? parseInt(s) : 0;
+  const count = !!n ? parseInt(n) : null;
+  const skip = !!s ? parseInt(s) : null;
+  const options = count != null && skip != null ? { count, skip } : undefined;
 
-  const options = !!count && !!skip ? { count, skip } : undefined;
   const contents = await AppServer.contentService.getContents(options);
 
   return json({ contents }, { status: 200 });

@@ -4,7 +4,8 @@
   import PageContent, { type ContentWithUser } from './PageContent.svelte';
 
   export async function fetchContents(): Promise<ContentWithUser[]> {
-    const res = await fetch('/api/diary/content');
+    const params = new URLSearchParams({ n: '20', s: '0' });
+    const res = await fetch(`/api/diary/content?${params.toString()}`);
     return (await res.json()).contents;
   }
 </script>
