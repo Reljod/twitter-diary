@@ -36,7 +36,15 @@ export class ContentRepository implements IContentRepository {
   ): Promise<Content[]> {
     return await this.prisma.content.findMany({
       skip: options?.skip || 0,
-      take: options?.count || 10
+      take: options?.count || 10,
+      orderBy: [
+        {
+          createdAt: 'desc'
+        },
+        {
+          id: 'desc'
+        }
+      ]
     });
   }
 
