@@ -8,8 +8,17 @@ export async function POST({ request }) {
   return json({ contentId }, { status: 201 });
 }
 
+export async function DELETE({ request }) {
+  const { contentId } = (await request.json()) as { contentId: number };
+  await AppServer.contentService.deleteContent(contentId);
+  return json({ contentId }, { status: 200 });
+}
+
 export async function GET({ url }) {
-  const contents = await AppServer.contentService.getContents({ count: 20, skip: 0 });
+  const contents = await AppServer.contentService.getContents({
+    count: 20,
+    skip: 0
+  });
 
   return json({ contents }, { status: 200 });
 }

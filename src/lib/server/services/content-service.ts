@@ -7,7 +7,11 @@ export interface Content {
 }
 
 export interface IContentService {
-  addContent: (authorId: number, content: Content, updatedBy: Date | undefined) => Promise<string>;
+  addContent: (
+    authorId: number,
+    content: Content,
+    updatedBy: Date | undefined
+  ) => Promise<string>;
 }
 
 interface Dependencies {
@@ -24,7 +28,11 @@ export class ContentService implements IContentService {
     this.userRepo = deps.userRepo;
   }
 
-  async addContent(authorId: number, content: Content, updatedAt: Date | undefined = undefined) {
+  async addContent(
+    authorId: number,
+    content: Content,
+    updatedAt: Date | undefined = undefined
+  ) {
     return await this.repo.save({
       authorId,
       title: content.title,
@@ -42,5 +50,9 @@ export class ContentService implements IContentService {
         return { ...content, username };
       })
     );
+  }
+
+  async deleteContent(contentId: number) {
+    await this.repo.delete(contentId);
   }
 }
