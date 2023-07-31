@@ -1,4 +1,6 @@
 <script lang="ts" context="module">
+  import { homeContents } from '$lib/client/stores/home-contents';
+  import { onMount } from 'svelte';
   import PageContent, { type ContentWithUser } from './PageContent.svelte';
 
   export async function fetchContents(): Promise<ContentWithUser[]> {
@@ -8,7 +10,15 @@
 </script>
 
 <script lang="ts">
-  export let contents: ContentWithUser[] = [];
+  let contents: ContentWithUser[] = [];
+
+  homeContents.subscribe((value) => {
+    contents = value || [];
+  });
+
+  onMount(async () => {
+    homeContents.set(await fetchContents());
+  });
 </script>
 
 <ul>
