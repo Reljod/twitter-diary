@@ -11,6 +11,7 @@
     fetchContents
   } from '$lib/client/component/home/PageContents.svelte';
   import ContentOptionsModal from '$lib/client/component/home/modals/ContentOptionsModal.svelte';
+  import DeleteConfirmationModal from '$lib/client/component/home/modals/DeleteConfirmationModal.svelte';
   import { homeContents } from '$lib/client/stores/home-contents';
 
   let contentBody: string;
@@ -85,4 +86,5 @@
     />
   </button>
   <ContentOptionsModal />
+  <DeleteConfirmationModal />
 </main>

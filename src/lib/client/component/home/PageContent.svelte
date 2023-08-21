@@ -27,7 +27,7 @@
 
 <script lang="ts">
   import MoreHoriz from '$lib/assets/icons/more-horiz.svelte';
-  import { modalContent } from '$lib/client/stores/modals';
+  import { modalContent, showModalContent } from '$lib/client/stores/modals';
   import renderer from '$lib/client/ui-tools/renderer/markdown';
   import { DatetimeDifference, UNIT_MAP } from '$lib/client/utils/datetime';
   import { afterUpdate } from 'svelte';
@@ -42,6 +42,11 @@
     return `${Math.floor(minDiff)}${Object(UNIT_MAP)[unit]}`;
   }
 
+  function onClickOptionHandler() {
+    modalContent.set({ ...content });
+    showModalContent.set(true);
+  }
+
   afterUpdate(() => {
     contentTitle.innerHTML = renderer.render(content.title);
     contentBody.innerHTML = content.body || '';
@@ -51,7 +56,7 @@
 <li class="relative flex border-t border-gray-100 p-3">
   <button
     class="absolute top-0 right-0 p-2 m-2 rounded-full focus:bg-primary-blue focus:bg-opacity-25"
-    on:click={() => modalContent.set({ ...content })}
+    on:click={() => onClickOptionHandler()}
   >
     <MoreHoriz class="fill-gray-500 h-5 w-5" />
   </button>
