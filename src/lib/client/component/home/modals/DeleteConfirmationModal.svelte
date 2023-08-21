@@ -1,3 +1,7 @@
+<script lang="ts" context="module">
+  export type OnDeleteDispatcher = { id: number; text: string };
+</script>
+
 <script lang="ts">
   import PageModal from '$lib/client/component/generic/modals/PageModal.svelte';
   import { fetchContents } from '$lib/client/component/home/PageContents.svelte';
@@ -6,6 +10,9 @@
     deleteModelContentId,
     showDeleteModalConfirmation
   } from '$lib/client/stores/modals';
+  import { createEventDispatcher } from 'svelte';
+
+  const dispatch = createEventDispatcher<{ delete: OnDeleteDispatcher }>();
 
   async function deleteContentHandler(contentId: number) {
     await fetch('/api/diary/content', {
@@ -18,6 +25,10 @@
     if (!!$deleteModelContentId) {
       await deleteContentHandler($deleteModelContentId);
       homeContents.set(await fetchContents());
+      dispatch('delete', {
+        id: $deleteModelContentId,
+        text: 'Your Tweet was deleted'
+      });
     }
 
     showDeleteModalConfirmation.set(false);

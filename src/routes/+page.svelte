@@ -10,15 +10,29 @@
   import PageContents, {
     fetchContents
   } from '$lib/client/component/home/PageContents.svelte';
+  import ActionBanner from '$lib/client/component/home/banners/ActionBanner.svelte';
   import ContentOptionsModal from '$lib/client/component/home/modals/ContentOptionsModal.svelte';
-  import DeleteConfirmationModal from '$lib/client/component/home/modals/DeleteConfirmationModal.svelte';
+  import DeleteConfirmationModal, {
+    type OnDeleteDispatcher
+  } from '$lib/client/component/home/modals/DeleteConfirmationModal.svelte';
   import { homeContents } from '$lib/client/stores/home-contents';
 
   let contentBody: string;
+  let deleteBannerInfo = { id: 0, text: '' };
+  let showDeleteBanner = false;
 
   async function submitContentHandler(content: ContentRequest) {
     await submitContent(content);
     homeContents.set(await fetchContents());
+  }
+
+  function onDeleteContentHandler(event: CustomEvent<OnDeleteDispatcher>) {
+    showDeleteBanner = true;
+    deleteBannerInfo = event.detail;
+  }
+
+  function actionBannerOnDisplayHandler(event: CustomEvent<boolean>) {
+    showDeleteBanner = event.detail;
   }
 </script>
 
@@ -86,5 +100,11 @@
     />
   </button>
   <ContentOptionsModal />
-  <DeleteConfirmationModal />
+  <DeleteConfirmationModal on:delete={onDeleteContentHandler} />
+  <ActionBanner
+    on:display={actionBannerOnDisplayHandler}
+    id={deleteBannerInfo.id}
+    show={showDeleteBanner}
+    text={deleteBannerInfo.text}
+  />
 </main>
