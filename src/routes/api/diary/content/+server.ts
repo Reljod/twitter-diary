@@ -1,28 +1,44 @@
 import { AppServer } from '$lib/server/index.js';
-import type { Content } from '$lib/server/services/content-service.js';
+import * as schema from '$lib/server/schema';
 import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
-  const { content } = (await request.json()) as { content: Content };
+  const data = await request.json();
+  const { content } = schema.AddContentRequestSchema.parse(data);
+
   const contentId = await AppServer.contentService.addContent(1, content);
-  return json({ contentId }, { status: 201 });
+
+  const response = schema.AddContentResponseSchema.parse({
+    contentId: contentId.toString()
+  });
+  return json(response, { status: 201 });
 }
 
 export async function DELETE({ request }) {
-  const { contentId } = (await request.json()) as { contentId: number };
+  const data = await request.json();
+  const { contentId } = schema.DeleteContentRequestSchema.parse(data);
+
   await AppServer.contentService.deleteContent(contentId);
-  return json({ contentId }, { status: 200 });
+
+  const response = schema.DeleteContentResponseSchema.parse({ contentId });
+  return json(response, { status: 200 });
 }
 
 export async function GET({ url }) {
   const n = url.searchParams.get('n');
   const s = url.searchParams.get('s');
 
-  const count = !!n ? parseInt(n) : null;
-  const skip = !!s ? parseInt(s) : null;
+  const optionsReq = schema.GetContentRequestParamsSchema.parse({
+    count: n,
+    skip: s
+  });
+
+  const count = !!optionsReq?.count ? parseInt(optionsReq.count) : null;
+  const skip = !!optionsReq?.skip ? parseInt(optionsReq.skip) : null;
   const options = count != null && skip != null ? { count, skip } : undefined;
 
   const contents = await AppServer.contentService.getContents(options);
 
-  return json({ contents }, { status: 200 });
+  const response = schema.GetContentResponseParamsSchema.parse({ contents });
+  return json(response, { status: 200 });
 }
