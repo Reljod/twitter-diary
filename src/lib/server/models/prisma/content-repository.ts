@@ -1,34 +1,26 @@
+import type {
+  ContentFetchOptions,
+  ContentRequest,
+  IContentRepository
+} from '$lib/server/models';
 import type { Content, PrismaClient } from '@prisma/client';
-
-interface ContentRequest {
-  title: string;
-  body: string;
-  updatedAt: Date;
-  authorId: number;
-}
-
-export interface IContentRepository {
-  save: (content: ContentRequest) => Promise<string>;
-  fetch: (options: ContentFetchOptions | undefined) => Promise<Content[]>;
-  delete: (contentId: number) => Promise<void>;
-}
 
 interface Dependencies {
   prisma: PrismaClient;
 }
 
-export class ContentRepository implements IContentRepository {
+export class ContentRepository implements IContentRepository<Content> {
   prisma: PrismaClient;
 
   constructor(deps: Dependencies) {
     this.prisma = deps.prisma;
   }
 
-  async save(content: ContentRequest): Promise<string> {
+  async save(content: ContentRequest): Promise<number> {
     const response = await this.prisma.content.create({
       data: content
     });
-    return response.id.toString();
+    return response.id;
   }
 
   async fetch(
@@ -55,9 +47,4 @@ export class ContentRepository implements IContentRepository {
       }
     });
   }
-}
-
-export interface ContentFetchOptions {
-  count: number;
-  skip: number;
 }

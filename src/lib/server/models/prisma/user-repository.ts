@@ -1,14 +1,11 @@
+import type { IUserRepostory } from '$lib/server/models';
 import type { PrismaClient, User } from '@prisma/client';
-
-export interface IUserRepostory {
-  getUserById: (id: number) => Promise<User>;
-}
 
 interface Dependencies {
   prisma: PrismaClient;
 }
 
-export class UserRepository implements IUserRepostory {
+export class UserRepository implements IUserRepostory<User> {
   prisma: PrismaClient;
 
   constructor(deps: Dependencies) {

@@ -1,7 +1,11 @@
-import type { ContentFetchOptions, IContentRepository } from '../models';
-import type { IUserRepostory } from '../models/user-repository';
+import type { Content, User } from '@prisma/client';
+import type {
+  ContentFetchOptions,
+  IContentRepository,
+  IUserRepostory
+} from '../models';
 
-export interface Content {
+export interface CreateContent {
   title: string;
   body: string;
 }
@@ -9,19 +13,19 @@ export interface Content {
 export interface IContentService {
   addContent: (
     authorId: number,
-    content: Content,
+    content: CreateContent,
     updatedBy: Date | undefined
-  ) => Promise<string>;
+  ) => Promise<number>;
 }
 
 interface Dependencies {
-  repo: IContentRepository;
-  userRepo: IUserRepostory;
+  repo: IContentRepository<Content>;
+  userRepo: IUserRepostory<User>;
 }
 
 export class ContentService implements IContentService {
-  private repo: IContentRepository;
-  private userRepo: IUserRepostory;
+  private repo: IContentRepository<Content>;
+  private userRepo: IUserRepostory<User>;
 
   constructor(deps: Dependencies) {
     this.repo = deps.repo;
@@ -30,7 +34,7 @@ export class ContentService implements IContentService {
 
   async addContent(
     authorId: number,
-    content: Content,
+    content: CreateContent,
     updatedAt: Date | undefined = undefined
   ) {
     return await this.repo.save({
