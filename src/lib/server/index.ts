@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { ContentRepository } from './models';
-import { UserRepository } from './models/user-repository';
+import { UserRepository } from './models/prisma/user-repository';
 import { ContentService, type IContentService } from './services';
 
 export interface IAppServer {
