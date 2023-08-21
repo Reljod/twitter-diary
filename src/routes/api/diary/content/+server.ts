@@ -1,6 +1,10 @@
 import { AppServer } from '$lib/server/index.js';
-import AddContentRequestSchema from '$lib/server/schema/content-schema/add-content-request-schema';
-import AddContentResponseSchema from '$lib/server/schema/content-schema/add-content-response-schema';
+import {
+  AddContentRequestSchema,
+  AddContentResponseSchema,
+  DeleteContentRequestSchema,
+  DeleteContentResponseSchema
+} from '$lib/server/schema';
 import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
@@ -16,9 +20,13 @@ export async function POST({ request }) {
 }
 
 export async function DELETE({ request }) {
-  const { contentId } = (await request.json()) as { contentId: number };
+  const data = await request.json();
+  const { contentId } = DeleteContentRequestSchema.parse(data);
+
   await AppServer.contentService.deleteContent(contentId);
-  return json({ contentId }, { status: 200 });
+
+  const response = DeleteContentResponseSchema.parse({ contentId });
+  return json(response, { status: 200 });
 }
 
 export async function GET({ url }) {
