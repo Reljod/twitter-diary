@@ -28,11 +28,17 @@ export async function GET({ url }) {
   const n = url.searchParams.get('n');
   const s = url.searchParams.get('s');
 
-  const count = !!n ? parseInt(n) : null;
-  const skip = !!s ? parseInt(s) : null;
+  const optionsReq = schema.GetContentRequestParamsSchema.parse({
+    count: n,
+    skip: s
+  });
+
+  const count = !!optionsReq?.count ? parseInt(optionsReq.count) : null;
+  const skip = !!optionsReq?.skip ? parseInt(optionsReq.skip) : null;
   const options = count != null && skip != null ? { count, skip } : undefined;
 
   const contents = await AppServer.contentService.getContents(options);
 
-  return json({ contents }, { status: 200 });
+  const response = schema.GetContentResponseParamsSchema.parse({ contents });
+  return json(response, { status: 200 });
 }
