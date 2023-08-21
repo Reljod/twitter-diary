@@ -15,7 +15,7 @@ export interface IContentService {
     authorId: number,
     content: CreateContent,
     updatedBy: Date | undefined
-  ) => Promise<string>;
+  ) => Promise<number>;
 }
 
 interface Dependencies {

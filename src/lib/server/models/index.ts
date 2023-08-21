@@ -15,7 +15,7 @@ export interface IUserRepostory<T> {
 }
 
 export interface IContentRepository<T> {
-  save: (content: ContentRequest) => Promise<string>;
+  save: (content: ContentRequest) => Promise<number>;
   fetch: (options: ContentFetchOptions | undefined) => Promise<T[]>;
   delete: (contentId: number) => Promise<void>;
 }

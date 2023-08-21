@@ -16,11 +16,11 @@ export class ContentRepository implements IContentRepository<Content> {
     this.prisma = deps.prisma;
   }
 
-  async save(content: ContentRequest): Promise<string> {
+  async save(content: ContentRequest): Promise<number> {
     const response = await this.prisma.content.create({
       data: content
     });
-    return response.id.toString();
+    return response.id;
   }
 
   async fetch(
