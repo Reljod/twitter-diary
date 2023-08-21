@@ -1,11 +1,18 @@
 import { AppServer } from '$lib/server/index.js';
-import type { Content } from '$lib/server/services/content-service.js';
+import AddContentRequestSchema from '$lib/server/schema/content-schema/add-content-request-schema';
+import AddContentResponseSchema from '$lib/server/schema/content-schema/add-content-response-schema';
 import { json } from '@sveltejs/kit';
 
 export async function POST({ request }) {
-  const { content } = (await request.json()) as { content: Content };
+  const data = await request.json();
+  const { content } = AddContentRequestSchema.parse(data);
+
   const contentId = await AppServer.contentService.addContent(1, content);
-  return json({ contentId }, { status: 201 });
+
+  const response = AddContentResponseSchema.parse({
+    contentId: contentId.toString()
+  });
+  return json(response, { status: 201 });
 }
 
 export async function DELETE({ request }) {
